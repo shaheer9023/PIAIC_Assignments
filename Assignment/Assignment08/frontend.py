@@ -4,6 +4,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import streamlit as st
 from dotenv import load_dotenv
 import os
+from os import getenv
 
 # Load environment variables
 load_dotenv()
