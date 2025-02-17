@@ -48,8 +48,12 @@ st.markdown("### Ask anything about the document 💭")
 user_input = st.text_input("", placeholder="Enter your question here...")
 
 # PDF processing
-pdf_path = "Panaversity Certified Agentic and Robotic AI Engineer.pdf"
-pdf_reader = PdfReader(pdf_path)
+try:
+    pdf_path = "Panaversity Certified Agentic and Robotic AI Engineer.pdf"
+    pdf_reader = PdfReader(pdf_path)
+except FileNotFoundError:
+    st.error("PDF file not found! Please make sure the file is in the same directory.")
+    st.stop()
 
 document = ""
 for page in pdf_reader.pages:
