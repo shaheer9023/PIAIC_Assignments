@@ -18,6 +18,49 @@ load_dotenv()
 # Get API key from environment variable
 api_key = os.getenv('GOOGLE_API_KEY')
 
+# Function to get default PDF content
+@st.cache_resource
+def get_default_content():
+    # Yahan pe PDF ka content as a string define kar rahe hain
+    return """
+    Presidential Initiative for Artificial Intelligence & Computing (PIAIC)
+    
+    The mission of PIAIC is to reshape Pakistan by revolutionizing education, research, and business by adopting latest, cutting-edge technologies. Experts are calling this the 4th industrial revolution. We want Pakistan to become a global hub for AI, data science, cloud native computing, edge computing, blockchain, augmented reality, and internet of things.
+    
+    Available Programs:
+    1. Artificial Intelligence
+    2. Cloud Native and Mobile Web Computing
+    3. Blockchain
+    4. Internet of Things and AI
+    
+    Artificial Intelligence Program Details:
+    - Duration: 1 Year
+    - Learning Tracks: Machine Learning, Deep Learning, AI Applications
+    
+    Cloud Native Program Details:
+    - Duration: 1 Year
+    - Learning Tracks: Web Development, Mobile Development, Cloud Computing
+    
+    Blockchain Program Details:
+    - Duration: 1 Year
+    - Learning Tracks: Smart Contracts, DApps, Tokenomics
+    
+    IoT Program Details:
+    - Duration: 1 Year
+    - Learning Tracks: Embedded Systems, IoT Networks, AI Integration
+    """
+
+# Replace PDF loading with static content
+document = get_default_content()
+st.success("Panaversity content loaded successfully! You can now ask questions.")
+
+# Update sidebar content
+with st.sidebar:
+    st.markdown("<div class='file-info-container'>", unsafe_allow_html=True)
+    st.markdown("<h3>📑 Current Document</h3>", unsafe_allow_html=True)
+    st.markdown("<div class='file-name'>Panaversity Content</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 # Enhanced Custom CSS with theme-responsive styling
 st.markdown("""
     <style>
@@ -166,6 +209,101 @@ st.markdown("""
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Update bot message styling */
+    .bot-message {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-left: 4px solid #0093E9;
+        padding: 20px;
+        font-size: 1.15rem;
+        line-height: 1.7;
+    }
+    
+    /* Improve paragraph spacing */
+    .bot-message p {
+        margin-bottom: 15px;
+    }
+    
+    /* Better list formatting */
+    .bot-message ul, .bot-message ol {
+        margin: 15px 0;
+        padding-left: 25px;
+        background: rgba(255,255,255,0.5);
+        padding: 15px 30px;
+        border-radius: 8px;
+    }
+    
+    .bot-message li {
+        margin: 12px 0;
+        line-height: 1.6;
+        padding-left: 10px;
+    }
+    
+    /* Add section breaks */
+    .bot-message hr {
+        margin: 20px 0;
+        border: 0;
+        border-top: 2px solid rgba(0,147,233,0.1);
+    }
+    
+    /* Highlight important points */
+    .bot-message strong {
+        color: #0093E9;
+        font-weight: 600;
+        background: rgba(0,147,233,0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+    
+    /* Format headings */
+    .bot-message h3 {
+        color: #0093E9;
+        margin: 20px 0 10px 0;
+        font-size: 1.3rem;
+    }
+    
+    /* Add quotes styling */
+    .bot-message blockquote {
+        border-left: 3px solid #0093E9;
+        margin: 15px 0;
+        padding: 10px 20px;
+        background: rgba(0,147,233,0.05);
+        border-radius: 0 8px 8px 0;
+    }
+    
+    /* Add card effect to messages */
+    .message {
+        transition: transform 0.2s ease;
+    }
+    
+    .message:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Improve code block styling if any */
+    .bot-message code {
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #e83e8c;
+        font-family: monospace;
+    }
+    
+    /* Add divider between messages */
+    .message {
+        position: relative;
+        margin-bottom: 25px;
+    }
+    
+    .message::after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(0,0,0,0.1);
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -194,133 +332,170 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Enhanced PDF uploader
-st.markdown("<div class='upload-container'>", unsafe_allow_html=True)
-uploaded_file = st.file_uploader("📄 Upload your PDF file", type=['pdf'])
-st.markdown("</div>", unsafe_allow_html=True)
+# Enhanced input field
+cols = st.columns([3, 1])
+with cols[0]:
+    user_input = st.text_input(
+        "🤔 Ask a question about your PDF:",
+        placeholder="Type your question here..."
+    )
+with cols[1]:
+    submit_button = st.button("🚀 Get Answer", type="primary")
 
-# Sidebar with file information
-with st.sidebar:
-    if uploaded_file is not None:
-        # Get file details
-        file_details = {
-            "Filename": uploaded_file.name,
-            "File size": f"{uploaded_file.size/1024:.1f} KB"
-        }
-        
-        st.markdown("<div class='file-info-container'>", unsafe_allow_html=True)
-        st.markdown("<h3>📑 Current File</h3>", unsafe_allow_html=True)
-        st.markdown(f"<div class='file-name'>{file_details['Filename']}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='file-details'>Size: {file_details['File size']}</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-    else:
-        st.markdown("<div class='file-info-container'>", unsafe_allow_html=True)
-        st.markdown("<h3>📑 No File Uploaded</h3>", unsafe_allow_html=True)
-        st.markdown("<div class='file-details'>Please upload a PDF file to get started</div>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+if submit_button and user_input:
+    # Clear previous chat history
+    st.session_state.chat_history = []
+    
+    # Add new user message
+    st.session_state.chat_history.append(("user", user_input))
+    
+    # Show loading state
+    with st.spinner("Thinking..."):
+        instruction = f"""You are a helpful assistant. Please follow these guidelines:
 
-if uploaded_file is not None:
-    # Show loading message
-    with st.spinner("Reading PDF..."):
-        pdf_reader = PdfReader(uploaded_file)
-        document = ""
-        for page in pdf_reader.pages:
-            document += page.extract_text()
-        
-        st.success("PDF loaded successfully! You can now ask questions.")
-
-    # Enhanced input field
-    cols = st.columns([3, 1])
-    with cols[0]:
-        user_input = st.text_input(
-            "🤔 Ask a question about your PDF:",
-            placeholder="Type your question here..."
-        )
-    with cols[1]:
-        submit_button = st.button("🚀 Get Answer", type="primary")
-
-    if submit_button and user_input:
-        # Add user message to chat history
-        st.session_state.chat_history.append(("user", user_input))
-        
-        # Show loading state
-        with st.spinner("Thinking..."):
-            instruction = f"""You are a helpful PDF assistant. Your task is to:
-1. Read and understand the following document content
-2. Answer the user's question based ONLY on the document content
-3. If the question cannot be answered from the document, respond with: "I apologize, but I cannot find information about this in the document."
+1. Read and understand the document content carefully
+2. Format your response with proper structure:
+   - Use headings for different sections
+   - Use bullet points or numbered lists for multiple items
+   - Add line breaks between paragraphs
+   - Highlight important points using **bold** text
+3. Answer based ONLY on the document content
+4. If information is not in the document, say: "I apologize, but I cannot find this information in the document."
 
 Document Content: {document}
 
 User Question: {user_input}
 
-Please provide a clear and concise answer."""
-            
-            try:
-                response = llm.invoke(instruction)
-                if response and response.content:
-                    formatted_response = response.content.replace('•', '◆').replace('*', '★')
-                    st.session_state.chat_history.append(("bot", formatted_response))
-                else:
-                    st.session_state.chat_history.append(("bot", "I apologize, but I encountered an error processing your question. Please try again."))
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-                st.session_state.chat_history.append(("bot", "I apologize, but I encountered an error. Please try again."))
+Please provide a well-structured, clear answer."""
+        
+        try:
+            response = llm.invoke(instruction)
+            if response and response.content:
+                formatted_response = response.content.replace('•', '◆').replace('*', '★')
+                st.session_state.chat_history.append(("bot", formatted_response))
+            else:
+                st.session_state.chat_history.append(("bot", "I apologize, but I encountered an error processing your question. Please try again."))
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+            st.session_state.chat_history.append(("bot", "I apologize, but I encountered an error. Please try again."))
 
-    # Display chat history with enhanced styling
-    st.markdown("""
-        <style>
-        .bot-message {
-            background: linear-gradient(135deg, #F5F7FA 0%, #E4E9F2 100%);
-            color: #333;
-            margin-right: auto;
-            border: none;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        .bot-message ul, .bot-message ol {
-            margin-left: 20px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .bot-message li {
-            margin-bottom: 5px;
-        }
-        
-        .bot-message p {
-            margin-bottom: 10px;
-        }
-        
-        .highlight {
-            background-color: #fff3cd;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+# Display chat history with enhanced styling
+st.markdown("""
+    <style>
+    .bot-message {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-left: 4px solid #0093E9;
+        padding: 20px;
+        font-size: 1.15rem;
+        line-height: 1.7;
+    }
+    
+    /* Improve paragraph spacing */
+    .bot-message p {
+        margin-bottom: 15px;
+    }
+    
+    /* Better list formatting */
+    .bot-message ul, .bot-message ol {
+        margin: 15px 0;
+        padding-left: 25px;
+        background: rgba(255,255,255,0.5);
+        padding: 15px 30px;
+        border-radius: 8px;
+    }
+    
+    .bot-message li {
+        margin: 12px 0;
+        line-height: 1.6;
+        padding-left: 10px;
+    }
+    
+    /* Add section breaks */
+    .bot-message hr {
+        margin: 20px 0;
+        border: 0;
+        border-top: 2px solid rgba(0,147,233,0.1);
+    }
+    
+    /* Highlight important points */
+    .bot-message strong {
+        color: #0093E9;
+        font-weight: 600;
+        background: rgba(0,147,233,0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+    
+    /* Format headings */
+    .bot-message h3 {
+        color: #0093E9;
+        margin: 20px 0 10px 0;
+        font-size: 1.3rem;
+    }
+    
+    /* Add quotes styling */
+    .bot-message blockquote {
+        border-left: 3px solid #0093E9;
+        margin: 15px 0;
+        padding: 10px 20px;
+        background: rgba(0,147,233,0.05);
+        border-radius: 0 8px 8px 0;
+    }
+    
+    .message {
+        transition: transform 0.2s ease;
+    }
+    
+    .message:hover {
+        transform: translateY(-2px);
+    }
+    
+    .bot-message code {
+        background: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #e83e8c;
+        font-family: monospace;
+    }
+    
+    .message {
+        position: relative;
+        margin-bottom: 25px;
+    }
+    
+    .message::after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(0,0,0,0.1);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-    # Display chat history
-    st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-    for role, message in st.session_state.chat_history:
-        if role == "user":
-            st.markdown(f"""
-                <div class='message user-message'>
-                    👤 You: {message}
-                </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-                <div class='message bot-message'>
-                    🤖 Assistant: {message}
-                </div>
-            """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-else:
-    # Show instruction when no PDF is uploaded
-    st.info("👆 Please upload a PDF file to get started!")
+# Display chat history
+st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
+for role, message in st.session_state.chat_history:
+    if role == "user":
+        st.markdown(f"""
+            <div class='message user-message'>
+                👤 <strong>You:</strong> {message}
+            </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Convert markdown-style formatting to HTML
+        formatted_message = message.replace('*', '<strong>').replace('_', '<em>')
+        formatted_message = formatted_message.replace('\n\n', '<br><br>')
+        
+        st.markdown(f"""
+            <div class='message bot-message'>
+                🤖 <strong>Assistant:</strong><br><br>
+                {formatted_message}
+            </div>
+        """, unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Enhanced footer
 st.markdown("""
