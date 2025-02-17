@@ -43,34 +43,35 @@ with st.sidebar:
     st.header("📄 Document Info")
     st.info("Currently loaded: Panaversity Certified Agentic and Robotic AI Engineer.pdf")
 
-# Main chat interface
-st.markdown("### Ask anything about the document 💭")
-user_input = st.text_input("", placeholder="Enter your question here...")
-
 # PDF processing
-pdf_path = "Panaversity Certified Agentic and Robotic AI Engineer.pdf"
-pdf_reader = PdfReader(pdf_path)
+uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
-document = ""
-for page in pdf_reader.pages:
-    document += page.extract_text()
+if uploaded_file is not None:
+    pdf_reader = PdfReader(uploaded_file)
+    
+    document = ""
+    for page in pdf_reader.pages:
+        document += page.extract_text()
 
-# Process query when user inputs something
-if user_input:
-    with st.spinner("AI is thinking..."):
-        instruction = f"""
-        You have to guide the user according to the provided document.
-        -the user input is here {user_input}
-        -the document is here {document}
-        if user asked something else than the document like,(hello or what is your name love you miss you etc blaa blaa type silly questions )
-        you have to judge the question and if the question is not related to the document then you have to say that you are not able to answer that question but if the question is related to the document then you have to answer the question.
-        """
-        
-        response = llm.invoke(instruction)
-        
-        # Display response in a nice container
-        st.markdown("### Response:")
-        st.write(response.content)
+    # Main chat interface
+    st.markdown("### Ask anything about the document 💭")
+    user_input = st.text_input("", placeholder="Enter your question here...")
+
+    # Process query when user inputs something
+    if user_input:
+        with st.spinner("AI is thinking..."):
+            instruction = f"""
+            You have to guide the user according to the provided document.
+            -the user input is here {user_input}
+            -the document is here {document}
+            if user asked something else than the document like,(hello or what is your name love you miss you etc blaa blaa type silly questions )
+            you have to judge the question and if the question is not related to the document then you have to say that you are not able to answer that question but if the question is related to the document then you have to answer the question.
+            """
+            
+            response = llm.invoke(instruction)
+            
+            st.markdown("### Response:")
+            st.write(response.content)
 
 # Footer
 st.markdown("---")
