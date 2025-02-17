@@ -1,9 +1,9 @@
 # Google Gemini AI aur PDF reader ke liye libraries import
 from PyPDF2 import PdfReader
 from langchain_google_genai import ChatGoogleGenerativeAI
-
+import os
 # Gemini AI model ko initialize karna with API key
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", api_key="AIzaSyCtrVX7O1eN87cAFOd8GdjrO0y_tLRPjtQ")
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY"))
 
 # User se question input lena
 user_input = input("Enter your question: ")
