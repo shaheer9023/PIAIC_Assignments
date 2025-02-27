@@ -3,7 +3,7 @@ from PyPDF2 import PdfReader
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
 # Gemini AI model ko initialize karna with API key
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY"))
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", api_key=os.getenv("GEMINI_API_KEY"))
 
 # User se question input lena
 user_input = input("Enter your question: ")
